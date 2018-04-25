@@ -1,0 +1,177 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="pruebaModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="cargos">
+          <Key>
+            <PropertyRef Name="car_cod" />
+          </Key>
+          <Property Name="car_cod" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="car_des" Type="varchar" MaxLength="50" />
+        </EntityType>
+        <EntityType Name="usuarios">
+          <Key>
+            <PropertyRef Name="usu_cod" />
+          </Key>
+          <Property Name="usu_cod" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="usu_nom" Type="nvarchar" MaxLength="50" />
+          <Property Name="car_cod" Type="int" />
+        </EntityType>
+        <Association Name="FK_usuarios_cargos">
+          <End Role="cargos" Type="Self.cargos" Multiplicity="0..1" />
+          <End Role="usuarios" Type="Self.usuarios" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="cargos">
+              <PropertyRef Name="car_cod" />
+            </Principal>
+            <Dependent Role="usuarios">
+              <PropertyRef Name="car_cod" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Function Name="prclistaareas" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
+        <Function Name="prclistausuario" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="id" Type="nvarchar" Mode="In" />
+        </Function>
+        <Function Name="prcopeusu" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="usu" Type="nvarchar" Mode="In" />
+          <Parameter Name="nom" Type="nvarchar" Mode="In" />
+          <Parameter Name="area" Type="nvarchar" Mode="In" />
+          <Parameter Name="tipo" Type="nvarchar" Mode="In" />
+        </Function>
+        <EntityContainer Name="pruebaModelStoreContainer">
+          <EntitySet Name="cargos" EntityType="Self.cargos" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="usuarios" EntityType="Self.usuarios" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK_usuarios_cargos" Association="Self.FK_usuarios_cargos">
+            <End Role="cargos" EntitySet="cargos" />
+            <End Role="usuarios" EntitySet="usuarios" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="pruebaModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="cargos">
+          <Key>
+            <PropertyRef Name="car_cod" />
+          </Key>
+          <Property Name="car_cod" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="car_des" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="usuarios" Relationship="Self.FK_usuarios_cargos" FromRole="cargos" ToRole="usuarios" />
+        </EntityType>
+        <EntityType Name="usuarios">
+          <Key>
+            <PropertyRef Name="usu_cod" />
+          </Key>
+          <Property Name="usu_cod" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="usu_nom" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="car_cod" Type="Int32" />
+          <NavigationProperty Name="cargos" Relationship="Self.FK_usuarios_cargos" FromRole="usuarios" ToRole="cargos" />
+        </EntityType>
+        <Association Name="FK_usuarios_cargos">
+          <End Role="cargos" Type="Self.cargos" Multiplicity="0..1" />
+          <End Role="usuarios" Type="Self.usuarios" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="cargos">
+              <PropertyRef Name="car_cod" />
+            </Principal>
+            <Dependent Role="usuarios">
+              <PropertyRef Name="car_cod" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="pruebaEntities1" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="cargos" EntityType="Self.cargos" />
+          <EntitySet Name="usuarios" EntityType="Self.usuarios" />
+          <AssociationSet Name="FK_usuarios_cargos" Association="Self.FK_usuarios_cargos">
+            <End Role="cargos" EntitySet="cargos" />
+            <End Role="usuarios" EntitySet="usuarios" />
+          </AssociationSet>
+          <FunctionImport Name="prclistaareas" ReturnType="Collection(pruebaModel.prclistaareas_Result)" />
+          <FunctionImport Name="prclistausuario" ReturnType="Collection(pruebaModel.prclistausuario_Result)" >
+            <Parameter Name="id" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="prcopeusu">
+            <Parameter Name="usu" Mode="In" Type="String" />
+            <Parameter Name="nom" Mode="In" Type="String" />
+            <Parameter Name="area" Mode="In" Type="String" />
+            <Parameter Name="tipo" Mode="In" Type="String" />
+          </FunctionImport>
+        </EntityContainer>
+        <ComplexType Name="prclistaareas_Result">
+          <Property Type="Int32" Name="car_cod" Nullable="false" />
+          <Property Type="String" Name="car_des" Nullable="true" MaxLength="50" />
+        </ComplexType>
+        <ComplexType Name="prclistausuario_Result">
+          <Property Type="Int32" Name="usu_cod" Nullable="false" />
+          <Property Type="String" Name="usu_nom" Nullable="true" MaxLength="50" />
+          <Property Type="String" Name="car_des" Nullable="true" MaxLength="50" />
+        </ComplexType>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="pruebaModelStoreContainer" CdmEntityContainer="pruebaEntities1">
+          <EntitySetMapping Name="cargos">
+            <EntityTypeMapping TypeName="pruebaModel.cargos">
+              <MappingFragment StoreEntitySet="cargos">
+                <ScalarProperty Name="car_cod" ColumnName="car_cod" />
+                <ScalarProperty Name="car_des" ColumnName="car_des" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="usuarios">
+            <EntityTypeMapping TypeName="pruebaModel.usuarios">
+              <MappingFragment StoreEntitySet="usuarios">
+                <ScalarProperty Name="usu_cod" ColumnName="usu_cod" />
+                <ScalarProperty Name="usu_nom" ColumnName="usu_nom" />
+                <ScalarProperty Name="car_cod" ColumnName="car_cod" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <FunctionImportMapping FunctionImportName="prclistaareas" FunctionName="pruebaModel.Store.prclistaareas">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="pruebaModel.prclistaareas_Result">
+                <ScalarProperty Name="car_cod" ColumnName="car_cod" />
+                <ScalarProperty Name="car_des" ColumnName="car_des" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="prclistausuario" FunctionName="pruebaModel.Store.prclistausuario">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="pruebaModel.prclistausuario_Result">
+                <ScalarProperty Name="usu_cod" ColumnName="usu_cod" />
+                <ScalarProperty Name="usu_nom" ColumnName="usu_nom" />
+                <ScalarProperty Name="car_des" ColumnName="car_des" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="prcopeusu" FunctionName="pruebaModel.Store.prcopeusu" />
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="false" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="Ninguno" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>

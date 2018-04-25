@@ -1,0 +1,48 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="pruebaModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+  <EntityType Name="cargos">
+    <Key>
+      <PropertyRef Name="car_cod" />
+    </Key>
+    <Property Name="car_cod" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="car_des" Type="varchar" MaxLength="50" />
+  </EntityType>
+  <EntityType Name="usuarios">
+    <Key>
+      <PropertyRef Name="usu_cod" />
+    </Key>
+    <Property Name="usu_cod" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="usu_nom" Type="nvarchar" MaxLength="50" />
+    <Property Name="car_cod" Type="int" />
+  </EntityType>
+  <Association Name="FK_usuarios_cargos">
+    <End Role="cargos" Type="Self.cargos" Multiplicity="0..1" />
+    <End Role="usuarios" Type="Self.usuarios" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="cargos">
+        <PropertyRef Name="car_cod" />
+      </Principal>
+      <Dependent Role="usuarios">
+        <PropertyRef Name="car_cod" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Function Name="prclistaareas" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
+  <Function Name="prclistausuario" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="id" Type="nvarchar" Mode="In" />
+  </Function>
+  <Function Name="prcopeusu" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="usu" Type="nvarchar" Mode="In" />
+    <Parameter Name="nom" Type="nvarchar" Mode="In" />
+    <Parameter Name="area" Type="nvarchar" Mode="In" />
+    <Parameter Name="tipo" Type="nvarchar" Mode="In" />
+  </Function>
+  <EntityContainer Name="pruebaModelStoreContainer">
+    <EntitySet Name="cargos" EntityType="Self.cargos" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="usuarios" EntityType="Self.usuarios" Schema="dbo" store:Type="Tables" />
+    <AssociationSet Name="FK_usuarios_cargos" Association="Self.FK_usuarios_cargos">
+      <End Role="cargos" EntitySet="cargos" />
+      <End Role="usuarios" EntitySet="usuarios" />
+    </AssociationSet>
+  </EntityContainer>
+</Schema>

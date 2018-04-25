@@ -1,0 +1,143 @@
+﻿@model IEnumerable<WebApplication4.Models.tarea>
+
+@{
+    ViewBag.Title = "nuevo";
+}
+
+<h2></h2>
+
+}
+<script src="~/Content/validate/jquery.validate.js"></script>
+
+
+    <form class="form-horizontal" id="signupForm">
+        <div class="panel panel-primary">
+            <div style="height:40px" class="panel-heading">
+                <div class="col-lg-11 col-xs-10">
+                    Registro de usuarios
+                </div>
+                <div class="col-lg-1 col-xs-1" style="text-align:right;">
+                    <a href="javascript:$('#detalleusuario').hide(200);"><i style="color:white" class="glyphicon glyphicon-remove" /> </a>
+                </div>
+            </div>
+            <div class="panel-body">
+
+                <div class="form-horizontal">
+
+                    <div class="form-group">
+
+                        <label class="control-label col-lg-2 col-lg-offset-2"> Usuario </label>
+                        <div class="col-md-6">
+                            <input type="text" class="form-control" name="nom_usu" id="nom_usu">
+
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+
+                        <label class="control-label col-lg-2 col-lg-offset-2"> Tipo </label>
+
+                        <div class="col-lg-6">
+                            <select id="idarea" name="idarea" class="form-control">
+                                <option value="*">Seleccione una area</option>
+                                @foreach (var item in Model)
+                                {
+                                       <option value=@Html.DisplayFor(modelItem => item.car_cod)>
+                                        @Html.DisplayFor(modelItem => item.car_nom)
+                                    </option>
+                                }
+
+                            </select>
+                        </div>
+                    </div>
+                    <div style="text-align:center" class="form-group">
+
+                        <input type="submit" value="Guardar"  class="btn btn-default" />
+
+                    </div>
+                </div>
+               
+            </div>
+        </div>
+    </form>
+
+        <script type="text/javascript">
+
+            $.validator.setDefaults({
+                submitHandler: function () {                    
+                    guardar();
+                }
+            });
+
+            $(document).ready(function () {
+
+                $("#signupForm").validate({
+                    rules: {
+                        nom_usu: {
+                            required: true,
+                            maxlength: 40,
+                            minlength: 3
+                        },
+                        idarea: {
+                            required: true,
+                            number: true
+                        }
+
+                    },
+                    messages: {
+                        nom_usu: {
+                            required: "Usuario es requeridos",
+                            minlength: "03 caracteres obligatorios"
+                        },
+                        idarea: {
+                            number: "Seleccione un cargo",
+                          
+                        },
+
+                    },
+                    errorPlacement: function (error, element) {
+                        error.addClass("ui red pointing label transition");
+                        error.insertAfter(element.parent());
+                    },
+                    highlight: function (element, errorClass, validClass) {
+                        $(element).parents(".row").addClass(errorClass);
+                    },
+                    unhighlight: function (element, errorClass, validClass) {
+                        $(element).parents(".row").removeClass(errorClass);
+                    }
+                });
+            });
+
+            
+        </script>
+
+<script type="text/javascript">
+   function guardar() {
+                var xnom = $('#nom_usu').val();
+                var xarea = $('#idarea').val();
+                var objDatos = { nom: xnom, car: xarea, tipo: "1", id: "*" };
+                $.ajax({
+                    type: "POST",
+                    url: '@Url.Action("guardar", "usuarios")',
+                    data: JSON.stringify(objDatos),
+                    contentType: "application/json; charset=utf-8",
+                    dataType: 'json',
+                    success: function (response) {
+                    if (response.Resultado == "OK") {
+                    swal("Se grabo correctamente", "", "success");
+                    $("#detalleusuario").hide();
+
+                    cargar();
+                    }
+                    else {
+                    alert("Error al registrar")
+                    }
+                    },
+                    error: function (response) {
+
+                    }
+                    });
+                    }
+</script>
+
+

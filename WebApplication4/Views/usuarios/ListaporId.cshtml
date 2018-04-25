@@ -1,0 +1,120 @@
+﻿@model IEnumerable<WebApplication4.Models.tusuario>
+
+@{
+    ViewBag.Title = "ListaporId";
+}
+
+<script>
+    function llenarLareas(area) {
+        $.ajax({
+            type: "POST",
+            url: '@Url.Action("lareas", "area")',
+            contentType: "application/json; charset=utf-8",
+            dataType: 'json',
+            success: function (data) {
+                $.each(data, function (index, value) {
+                    var selecc = "";
+                    if (area == value.car_nom) {
+                        selecc = "selected";
+                    }
+
+                    $("#idarea").append('<option ' + selecc +'  value="' + value.car_cod + '">' + value.car_nom + '</option>');
+                });              
+            },
+            error: function (response) {
+            }
+        });
+    }
+
+    function editarusu(xid) {
+        var xnom = $('#nom_usu').val();
+        var xarea = $('#idarea').val();
+        var objDatos = { nom: xnom, car: xarea, tipo: "2",id:xid };
+        $.ajax({
+            type: "POST",
+            url: '@Url.Action("guardar", "usuarios")',
+            data: JSON.stringify(objDatos),
+            contentType: "application/json; charset=utf-8",
+            dataType: 'json',
+            success: function (response) {
+                if (response.Resultado == "OK") {
+                    swal("Se actualizo correctamente", "", "success");
+                    $("#detalleusuario").hide();
+
+                    cargar();
+                }
+                else {
+                    alert("Error al registrar")
+                }
+            },
+            error: function (response) {
+
+            }
+        });
+    }
+</script>
+
+@foreach (var item in Model) {
+
+            
+
+    <script>llenarLareas('@Html.DisplayFor(modelItem => item.usu_cargo)')</script>
+    <div class="panel panel-primary">
+        <div style="height:40px" class="panel-heading">
+            <div class="col-lg-11 col-xs-10">
+                Registro de usuarios
+            </div>
+            <div class="col-lg-1 col-xs-1" style="text-align:right;">
+                <a href="javascript:$('#detalleusuario').hide(200);"><i style="color:white" class="glyphicon glyphicon-remove" /> </a>
+            </div>
+        </div>
+        <div class="panel-body">
+
+            <div class="form-horizontal">
+
+
+                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+
+                <div class="form-group">
+
+                    <label class="control-label col-lg-2 col-lg-offset-2"> Usuario </label>
+                    <div class="col-md-6">
+                        <input type="text" value='@Html.DisplayFor(modelItem => item.usu_nom)' class="form-control" id="nom_usu">
+
+                    </div>
+                </div>
+
+                <div class="form-group">
+
+                    <label class="control-label col-lg-2 col-lg-offset-2"> Tipo </label>
+
+                    <div class="col-lg-6">
+                        <select id="idarea" class="form-control">
+                            
+
+                        </select>
+                    </div>
+
+                </div>
+
+
+
+                <div style="text-align:center" class="form-group">
+
+                    <input type="button" value="Guardar" onclick="editarusu(@Html.DisplayFor(modelItem => item.usu_cod))" class="btn btn-default" />
+
+                </div>
+            </div>
+            <div style="text-align:center">
+
+                @*@Html.ActionLink("Back to List", "Index")*@
+            </div>
+        </div>
+    </div>
+
+
+
+}
+
+</table>

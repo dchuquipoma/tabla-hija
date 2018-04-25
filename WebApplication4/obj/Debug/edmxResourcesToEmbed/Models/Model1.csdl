@@ -1,0 +1,59 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="pruebaModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+  <EntityType Name="cargos">
+    <Key>
+      <PropertyRef Name="car_cod" />
+    </Key>
+    <Property Name="car_cod" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="car_des" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+    <NavigationProperty Name="usuarios" Relationship="Self.FK_usuarios_cargos" FromRole="cargos" ToRole="usuarios" />
+  </EntityType>
+  <EntityType Name="usuarios">
+    <Key>
+      <PropertyRef Name="usu_cod" />
+    </Key>
+    <Property Name="usu_cod" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="usu_nom" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="car_cod" Type="Int32" />
+    <NavigationProperty Name="cargos" Relationship="Self.FK_usuarios_cargos" FromRole="usuarios" ToRole="cargos" />
+  </EntityType>
+  <Association Name="FK_usuarios_cargos">
+    <End Role="cargos" Type="Self.cargos" Multiplicity="0..1" />
+    <End Role="usuarios" Type="Self.usuarios" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="cargos">
+        <PropertyRef Name="car_cod" />
+      </Principal>
+      <Dependent Role="usuarios">
+        <PropertyRef Name="car_cod" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <EntityContainer Name="pruebaEntities1" annotation:LazyLoadingEnabled="true">
+    <EntitySet Name="cargos" EntityType="Self.cargos" />
+    <EntitySet Name="usuarios" EntityType="Self.usuarios" />
+    <AssociationSet Name="FK_usuarios_cargos" Association="Self.FK_usuarios_cargos">
+      <End Role="cargos" EntitySet="cargos" />
+      <End Role="usuarios" EntitySet="usuarios" />
+    </AssociationSet>
+    <FunctionImport Name="prclistaareas" ReturnType="Collection(pruebaModel.prclistaareas_Result)" />
+    <FunctionImport Name="prclistausuario" ReturnType="Collection(pruebaModel.prclistausuario_Result)">
+      <Parameter Name="id" Mode="In" Type="String" />
+    </FunctionImport>
+    <FunctionImport Name="prcopeusu">
+      <Parameter Name="usu" Mode="In" Type="String" />
+      <Parameter Name="nom" Mode="In" Type="String" />
+      <Parameter Name="area" Mode="In" Type="String" />
+      <Parameter Name="tipo" Mode="In" Type="String" />
+    </FunctionImport>
+  </EntityContainer>
+  <ComplexType Name="prclistaareas_Result">
+    <Property Type="Int32" Name="car_cod" Nullable="false" />
+    <Property Type="String" Name="car_des" Nullable="true" MaxLength="50" />
+  </ComplexType>
+  <ComplexType Name="prclistausuario_Result">
+    <Property Type="Int32" Name="usu_cod" Nullable="false" />
+    <Property Type="String" Name="usu_nom" Nullable="true" MaxLength="50" />
+    <Property Type="String" Name="car_des" Nullable="true" MaxLength="50" />
+  </ComplexType>
+</Schema>

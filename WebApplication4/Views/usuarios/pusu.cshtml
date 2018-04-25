@@ -1,0 +1,24 @@
+﻿
+@{
+    ViewBag.Title = "pusu";
+}
+<h2>Administracion usuarios</h2>
+<script>
+    function cargar() {
+        $.ajax({
+            type: "POST",
+            url: '@Url.Action("Index", "usuarios")',
+            data: {},
+            dataType: 'html',
+            success: function (response) {
+                $("#lusuarios").html(response).show();
+            },
+            error: function (response) {
+            }
+       });
+    }
+</script>
+<div id="lusuarios"></div>
+<script>cargar()</script>
+<div id="detusu"></div>
+
